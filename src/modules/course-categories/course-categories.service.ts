@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectConnection, InjectModel } from '@nestjs/mongoose';
-import { Connection, Model } from 'mongoose';
+import { Connection, Model, Types } from 'mongoose';
 import {
   CourseCategories,
   CourseCategoriesDocument,
@@ -15,23 +15,58 @@ export class CourseCategoriesService {
     @InjectConnection() private readonly connection: Connection,
   ) {}
 
-  async findAll(): Promise<CourseCategories[]> {
-    return this.CourseCategoriesModel.find().exec();
+  async findAll(includes?: string): Promise<CourseCategories[]> {
+    const include = [
+      {
+        $lookup: {
+          from: 'courses',
+          localField: '_id',
+          foreignField: 'course_categories_id',
+          as: 'courses',
+        },
+      },
+    ];
+    if (includes == 'courses') {
+      return await this.CourseCategoriesModel.aggregate(include);
+    } else {
+      return await this.CourseCategoriesModel.find().exec();
+    }
   }
 
-  async find(id: string): Promise<CourseCategories | null> {
-    return this.CourseCategoriesModel.findById(id).exec();
+  async find(id: string, includes?: string): Promise<CourseCategories | null> {
+    const include = [
+      {
+        $match: {
+          _id: new Types.ObjectId(id),
+        },
+      },
+      {
+        $lookup: {
+          from: 'courses',
+          localField: '_id',
+          foreignField: 'course_categories_id',
+          as: 'courses',
+        },
+      },
+    ];
+    if (includes == 'courses') {
+      const res: CourseCategories[] =
+        await this.CourseCategoriesModel.aggregate(include);
+      return res[0] || null;
+    } else {
+      return await this.CourseCategoriesModel.findById(id).exec();
+    }
   }
 
   async create(course: Partial<CourseCategories>) {
-    return this.CourseCategoriesModel.create(course);
+    return await this.CourseCategoriesModel.create(course);
   }
 
   async update(
     id: string,
     updateCourseCategoryDto: UpdateCourseCategoryDto,
   ): Promise<CourseCategories | null> {
-    return this.CourseCategoriesModel.findByIdAndUpdate(
+    return await this.CourseCategoriesModel.findByIdAndUpdate(
       id,
       updateCourseCategoryDto,
       { new: true },
@@ -39,6 +74,6 @@ export class CourseCategoriesService {
   }
 
   async delete(id: string) {
-    return this.CourseCategoriesModel.findByIdAndDelete(id);
+    return await this.CourseCategoriesModel.findByIdAndDelete(id);
   }
 }

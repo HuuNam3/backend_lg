@@ -1,4 +1,5 @@
 {
+  "types": ["node", "express", "./types/express"],
   "compilerOptions": {
     "module": "commonjs",
     "declaration": true,

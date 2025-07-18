@@ -1,11 +1,15 @@
-import { Module } from '@nestjs/common';
+import {
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+  RequestMethod,
+} from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
-import { CoursesModule } from './modules/courses/courses.module';
-import { UserAccountsModule } from './modules/user-accounts/user-accounts.module';
 import { CourseCategoriesModule } from './modules/course-categories/course-categories.module';
+import { LoggerMiddleware } from './middeware/logger/logger.middleware';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
@@ -14,11 +18,16 @@ import { CourseCategoriesModule } from './modules/course-categories/course-categ
         uri: process.env.MONGODB_URI,
       }),
     }),
-    CoursesModule,
-    UserAccountsModule,
     CourseCategoriesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(LoggerMiddleware).forRoutes({
+      path: '/course-categories',
+      method: RequestMethod.ALL,
+    });
+  }
+}
