@@ -2,7 +2,6 @@ import {
   MiddlewareConsumer,
   Module,
   NestModule,
-  RequestMethod,
 } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -29,15 +28,6 @@ import { AuthModule } from './modules/auth/auth.module';
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(LoggerMiddleware).forRoutes(
-      {
-        path: '/user-accounts',
-        method: RequestMethod.ALL,
-      },
-      {
-        path: '/user-accounts/',
-        method: RequestMethod.ALL,
-      },
-    );
+    consumer.apply(LoggerMiddleware).forRoutes('*');
   }
 }

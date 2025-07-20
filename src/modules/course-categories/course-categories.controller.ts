@@ -11,6 +11,7 @@ import {
   HttpException,
   HttpStatus,
   Req,
+  Logger,
 } from '@nestjs/common';
 import { Request } from 'express';
 import { CourseCategoriesService } from './course-categories.service';
@@ -20,6 +21,7 @@ import { Types } from 'mongoose';
 
 @Controller('course-categories')
 export class CourseCategoriesController {
+  private readonly logger = new Logger(CourseCategoriesController.name);
   constructor(
     private readonly courseCategoriesService: CourseCategoriesService,
   ) {}
@@ -32,8 +34,9 @@ export class CourseCategoriesController {
 
   @Get('/:id')
   async find(@Param('id') id: string, @Query('includes') includes: string) {
+    this.logger.error('findOne');
     if (!Types.ObjectId.isValid(id)) {
-      throw new HttpException('ID không hợp lệ', HttpStatus.BAD_REQUEST);
+      throw new HttpException('Không tìm thấy ID', HttpStatus.NOT_FOUND);
     }
     const res = await this.courseCategoriesService.find(id, includes);
     if (!res) {
