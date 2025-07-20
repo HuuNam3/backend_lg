@@ -5,6 +5,7 @@ import {
   UseGuards,
   Request,
   Get,
+  BadRequestException,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { hash } from 'bcrypt';
@@ -25,8 +26,19 @@ export class AuthController {
     return this.TService.login(req.user);
   }
 
+  @Post('refresh-token')
+  async refreshToken(@Body() { refreshToken }: { refreshToken: string }) {
+    if (!refreshToken) {
+      throw new BadRequestException('refresh token is required');
+    }
+    const user = await this.TService.verfiyRefreshToken(refreshToken);
+    if (user) {
+      return this.TService.login(user);
+    }
+  }
+
   @UseGuards(JwtAuthGuard)
-  @Get('/me')
+  @Get('me')
   getProfile(@Request() req) {
     return req.user;
   }

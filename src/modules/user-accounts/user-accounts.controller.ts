@@ -27,7 +27,6 @@ export class UserAccountsController {
 
   @Get()
   findAll(@Query('includes') includes: string, @Req() req: Request) {
-    console.log(req.user);
     return this.TService.findAll(includes);
   }
 

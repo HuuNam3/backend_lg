@@ -31,6 +31,9 @@ export class UserAccounts {
   role: string;
 
   @Prop()
+  refresh_token: string;
+
+  @Prop()
   createdAt: Date;
 
   @Prop()
