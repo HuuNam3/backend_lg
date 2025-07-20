@@ -5,7 +5,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import {
   CourseCategories,
   CourseCategoriesSchema,
-} from './schemas/course-categories.schema';
+} from '../../schemas/course-categories.schema';
 
 @Module({
   imports: [

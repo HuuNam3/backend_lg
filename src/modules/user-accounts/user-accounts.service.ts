@@ -1,21 +1,21 @@
 import { Injectable } from '@nestjs/common';
 import { InjectConnection, InjectModel } from '@nestjs/mongoose';
 import { Connection, Model, Types } from 'mongoose';
-import {
-  CourseCategories,
-  CourseCategoriesDocument,
-} from '../../schemas/course-categories.schema';
 import { UpdateCourseCategoryDto } from './dto/update-course-category.dto';
+import {
+  UserAccounts,
+  UserAccountsDocument,
+} from 'src/schemas/user-accoutns.schema';
 
 @Injectable()
-export class CourseCategoriesService {
+export class UserAccountsService {
   constructor(
-    @InjectModel(CourseCategories.name)
-    private CourseCategoriesModel: Model<CourseCategoriesDocument>,
+    @InjectModel(UserAccounts.name)
+    private TModel: Model<UserAccountsDocument>,
     @InjectConnection() private readonly connection: Connection,
   ) {}
 
-  async findAll(includes?: string): Promise<CourseCategories[]> {
+  async findAll(includes?: string): Promise<UserAccounts[]> {
     const include = [
       {
         $lookup: {
@@ -27,13 +27,19 @@ export class CourseCategoriesService {
       },
     ];
     if (includes == 'courses') {
-      return await this.CourseCategoriesModel.aggregate(include);
+      return await this.TModel.aggregate(include);
     } else {
-      return await this.CourseCategoriesModel.find().exec();
+      return await this.TModel.find().exec();
     }
   }
 
-  async find(id: string, includes?: string): Promise<CourseCategories | null> {
+  async findByEmailOrUsername(identifier: string) {
+    return this.TModel.findOne({
+      $or: [{ email: identifier }, { username: identifier }],
+    }).exec();
+  }
+
+  async findOne(id: string, includes?: string): Promise<UserAccounts | null> {
     const include = [
       {
         $match: {
@@ -50,30 +56,27 @@ export class CourseCategoriesService {
       },
     ];
     if (includes == 'courses') {
-      const res: CourseCategories[] =
-        await this.CourseCategoriesModel.aggregate(include);
+      const res: UserAccounts[] = await this.TModel.aggregate(include);
       return res[0] || null;
     } else {
-      return await this.CourseCategoriesModel.findById(id).exec();
+      return await this.TModel.findById(id).exec();
     }
   }
 
-  async create(course: Partial<CourseCategories>) {
-    return await this.CourseCategoriesModel.create(course);
+  async create(course: Partial<UserAccounts>) {
+    return await this.TModel.create(course);
   }
 
   async update(
     id: string,
     updateCourseCategoryDto: UpdateCourseCategoryDto,
-  ): Promise<CourseCategories | null> {
-    return await this.CourseCategoriesModel.findByIdAndUpdate(
-      id,
-      updateCourseCategoryDto,
-      { new: true },
-    ).exec();
+  ): Promise<UserAccounts | null> {
+    return await this.TModel.findByIdAndUpdate(id, updateCourseCategoryDto, {
+      new: true,
+    }).exec();
   }
 
   async delete(id: string) {
-    return await this.CourseCategoriesModel.findByIdAndDelete(id);
+    return await this.TModel.findByIdAndDelete(id);
   }
 }
