@@ -1,16 +1,18 @@
-import { HttpStatus, Injectable, NestMiddleware } from '@nestjs/common';
+import { Injectable, NestMiddleware } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
 
 @Injectable()
 export class LoggerMiddleware implements NestMiddleware {
   use(req: Request, res: Response, next: NextFunction) {
-    req.user = 'hello';
-    let isAuth = false;
-    if (!isAuth) {
-      return res.status(HttpStatus.UNAUTHORIZED).json({
-        message: 'Unauthorized',
-      });
-    }
+    const ip = req.ip || req.connection.remoteAddress || 'unknown IP';
+    const method = req.method;
+    const url = req.originalUrl;
+    const userAgent = req.headers['user-agent'] || 'unknown agent';
+    const timestamp = new Date().toISOString();
+
+    const log = `[${timestamp}] ${method} ${url} - IP: ${ip} - Agent: ${userAgent}`;
+
+    console.log(log);
     next();
   }
 }
