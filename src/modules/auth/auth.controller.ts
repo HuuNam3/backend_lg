@@ -11,13 +11,13 @@ import { AuthService } from './auth.service';
 import { hash } from 'bcrypt';
 import { LocalAuthGuard } from 'src/guards/local-auth.guard';
 import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
+import { CreateUserAccountsDto } from 'src/dto/create-user-accounts.dto';
 @Controller('auth')
 export class AuthController {
   constructor(private readonly TService: AuthService) {}
   @Post('/register')
-  async create(@Body() userData: any) {
-    const hashedPassword = await hash(userData.password, 10);
-    userData.password = hashedPassword;
+  async create(@Body() userData: CreateUserAccountsDto) {
+    return this.TService.register(userData);
   }
 
   @UseGuards(LocalAuthGuard)

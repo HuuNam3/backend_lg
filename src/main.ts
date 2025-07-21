@@ -13,7 +13,6 @@ async function bootstrap() {
     cors: true,
     logger: winstonLogger,
   });
-  app.useGlobalFilters(new HttpExceptionFilter());
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,
@@ -26,6 +25,7 @@ async function bootstrap() {
       },
     }),
   );
+  app.useGlobalFilters(new HttpExceptionFilter());
   await app.listen(process.env.PORT || 4000);
 }
 bootstrap();

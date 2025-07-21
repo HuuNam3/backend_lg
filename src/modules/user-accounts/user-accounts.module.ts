@@ -3,7 +3,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import {
   UserAccounts,
   UserAccountsSchema,
-} from 'src/schemas/user-accoutns.schema';
+} from 'src/schemas/user-accounts.schema';
 import { UserAccountsController } from './user-accounts.controller';
 import { UserAccountsService } from './user-accounts.service';
 import { JwtStrategy } from 'src/passport/jwt.strategy';

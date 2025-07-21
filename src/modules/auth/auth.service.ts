@@ -13,6 +13,10 @@ export class AuthService {
     private readonly configService: ConfigService,
   ) {}
 
+  register(user: any) {
+    return this.TService.create(user);
+  }
+
   login(user: any) {
     const payload = { email: user.email, sub: user._id };
 

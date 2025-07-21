@@ -10,20 +10,20 @@ import {
   Query,
   HttpException,
   HttpStatus,
-  UseGuards,
   Logger,
+  UseGuards,
 } from '@nestjs/common';
-import { UpdateUserAccountsDto } from '../../dto/update-user-accounts.dto';
-import { CreateUserAccountsDto } from '../../dto/create-user-accounts.dto';
+import { CourseIntroductionService } from './course-introduction.service';
+import { UpdateCourseCategoryDto } from '../../dto/update-course-category.dto';
+import { CreateCourseCategoryDto } from '../../dto/create-course-category.dto';
 import { Types } from 'mongoose';
-import { UserAccountsService } from './user-accounts.service';
 import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
 
-@Controller('user-accounts')
-@UseGuards(JwtAuthGuard)
-export class UserAccountsController {
-  private readonly logger = new Logger(UserAccountsController.name);
-  constructor(private readonly TService: UserAccountsService) {}
+@Controller('course-introduction')
+@UseGuards(JwtAuthGuard) // đăng nhập mới cho sử dụng controler
+export class CourseIntroductionController {
+  private readonly logger = new Logger(CourseIntroductionController.name);
+  constructor(private readonly TService: CourseIntroductionService) {}
 
   @Get()
   findAll(@Query('includes') includes: string) {
@@ -39,24 +39,30 @@ export class UserAccountsController {
     const res = await this.TService.findOne(id, includes);
     if (!res) {
       this.logger.error('findOne');
-      throw new HttpException('không tìm thấy id', HttpStatus.NOT_FOUND);
+      throw new HttpException('không tìm thấy ID', HttpStatus.NOT_FOUND);
     }
     return res;
   }
 
   @Post()
-  create(@Body() createDto: CreateUserAccountsDto) {
+  create(@Body() createDto: CreateCourseCategoryDto) {
     return this.TService.create(createDto);
   }
 
   @Put('/:id')
-  update(@Param('id') id: string, @Body() updateDto: UpdateUserAccountsDto) {
-    return this.TService.update(id, updateDto);
+  update(
+    @Param('id') id: string,
+    @Body() updateCourseCategoryDto: UpdateCourseCategoryDto,
+  ) {
+    return this.TService.update(id, updateCourseCategoryDto);
   }
 
   @Patch('/:id')
-  patch(@Param('id') id: string, @Body() updateDto: UpdateUserAccountsDto) {
-    return this.TService.update(id, updateDto);
+  patch(
+    @Param('id') id: string,
+    @Body() updateCourseCategoryDto: UpdateCourseCategoryDto,
+  ) {
+    return this.TService.update(id, updateCourseCategoryDto);
   }
 
   @Delete('/:id')

@@ -1,8 +1,4 @@
-import {
-  MiddlewareConsumer,
-  Module,
-  NestModule,
-} from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
@@ -11,6 +7,12 @@ import { CourseCategoriesModule } from './modules/course-categories/course-categ
 import { LoggerMiddleware } from './middeware/logger/logger.middleware';
 import { UserAccountsModule } from './modules/user-accounts/user-accounts.module';
 import { AuthModule } from './modules/auth/auth.module';
+import { CourseIntroductionModule } from './modules/course-introduction/course-introduction.module';
+import { CoursesModule } from './modules/courses/courses.module';
+import { LessonVideosModule } from './modules/lesson-videos/lesson-videos.module';
+import { UserCoursesModule } from './modules/user-courses/user-courses.module';
+import { UserLessonProgressModule } from './modules/user-lesson-progress/user-lesson-progress.module';
+import { LessonsModule } from './modules/lessons/lessons.module';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
@@ -19,9 +21,15 @@ import { AuthModule } from './modules/auth/auth.module';
         uri: process.env.MONGODB_URI,
       }),
     }),
-    CourseCategoriesModule,
-    UserAccountsModule,
     AuthModule,
+    CoursesModule,
+    LessonsModule,
+    UserCoursesModule,
+    LessonVideosModule,
+    UserAccountsModule,
+    CourseCategoriesModule,
+    UserLessonProgressModule,
+    CourseIntroductionModule,
   ],
   controllers: [AppController],
   providers: [AppService],

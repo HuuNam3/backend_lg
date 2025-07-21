@@ -1,11 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectConnection, InjectModel } from '@nestjs/mongoose';
-import { Connection, Model, Types } from 'mongoose';
-import { UpdateCourseCategoryDto } from './dto/update-course-category.dto';
+import { Connection, Model } from 'mongoose';
+import { UpdateUserAccountsDto } from '../../dto/update-user-accounts.dto';
 import {
   UserAccounts,
   UserAccountsDocument,
-} from 'src/schemas/user-accoutns.schema';
+} from 'src/schemas/user-accounts.schema';
+import { checkCollections, includeHandle } from 'src/lib/include-handle';
 
 @Injectable()
 export class UserAccountsService {
@@ -15,21 +16,13 @@ export class UserAccountsService {
     @InjectConnection() private readonly connection: Connection,
   ) {}
 
-  async findAll(includes?: string): Promise<UserAccounts[]> {
-    const include = [
-      {
-        $lookup: {
-          from: 'courses',
-          localField: '_id',
-          foreignField: 'course_categories_id',
-          as: 'courses',
-        },
-      },
-    ];
-    if (includes == 'courses') {
-      return await this.TModel.aggregate(include);
-    } else {
+  async findAll(includes?: string): Promise<any> {
+    if (!checkCollections(includes)) {
       return await this.TModel.find().exec();
+    }
+    const include = includeHandle(includes, '_id', 'course_categories_id');
+    if (include) {
+      return await this.TModel.aggregate(include);
     }
   }
 
@@ -39,27 +32,14 @@ export class UserAccountsService {
     }).exec();
   }
 
-  async findOne(id: string, includes?: string): Promise<UserAccounts | null> {
-    const include = [
-      {
-        $match: {
-          _id: new Types.ObjectId(id),
-        },
-      },
-      {
-        $lookup: {
-          from: 'courses',
-          localField: '_id',
-          foreignField: 'course_categories_id',
-          as: 'courses',
-        },
-      },
-    ];
-    if (includes == 'courses') {
+  async findOne(id: string, includes?: string): Promise<any> {
+    if (!checkCollections(includes)) {
+      return await this.TModel.findById(id).exec();
+    }
+    const include = includeHandle(includes, '_id', 'course_categories_id', id);
+    if (include) {
       const res: UserAccounts[] = await this.TModel.aggregate(include);
       return res[0] || null;
-    } else {
-      return await this.TModel.findById(id).exec();
     }
   }
 
@@ -69,9 +49,9 @@ export class UserAccountsService {
 
   async update(
     id: string,
-    updateCourseCategoryDto: UpdateCourseCategoryDto,
+    updateDto: UpdateUserAccountsDto,
   ): Promise<UserAccounts | null> {
-    return await this.TModel.findByIdAndUpdate(id, updateCourseCategoryDto, {
+    return await this.TModel.findByIdAndUpdate(id, updateDto, {
       new: true,
     }).exec();
   }

@@ -2,17 +2,17 @@ import { Injectable } from '@nestjs/common';
 import { InjectConnection, InjectModel } from '@nestjs/mongoose';
 import { Connection, Model } from 'mongoose';
 import {
-  CourseCategories,
-  CourseCategoriesDocument,
-} from '../../schemas/course-categories.schema';
+  UserCourses,
+  UserCoursesDocument,
+} from '../../schemas/user-courses.schema';
 import { UpdateCourseCategoryDto } from '../../dto/update-course-category.dto';
 import { checkCollections, includeHandle } from 'src/lib/include-handle';
 
 @Injectable()
-export class CourseCategoriesService {
+export class UserCoursesService {
   constructor(
-    @InjectModel(CourseCategories.name)
-    private TModel: Model<CourseCategoriesDocument>,
+    @InjectModel(UserCourses.name)
+    private TModel: Model<UserCoursesDocument>,
     @InjectConnection() private readonly connection: Connection,
   ) {}
 
@@ -32,19 +32,19 @@ export class CourseCategoriesService {
     }
     const include = includeHandle(includes, '_id', 'course_categories_id', id);
     if (include) {
-      const res: CourseCategories[] = await this.TModel.aggregate(include);
+      const res: UserCourses[] = await this.TModel.aggregate(include);
       return res[0] || null;
     }
   }
 
-  async create(data: Partial<CourseCategories>) {
+  async create(data: Partial<UserCourses>) {
     return await this.TModel.create(data);
   }
 
   async update(
     id: string,
     updateDto: UpdateCourseCategoryDto,
-  ): Promise<CourseCategories | null> {
+  ): Promise<UserCourses | null> {
     return await this.TModel.findByIdAndUpdate(id, updateDto, {
       new: true,
     }).exec();
