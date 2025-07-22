@@ -30,6 +30,14 @@ export class UserAccountsService {
     return this.TModel.findOne({
       $or: [{ email: identifier }, { username: identifier }],
     }).exec();
+    // .select('-password')
+  }
+  async findByEmailOrUsernameNoPass(identifier: string) {
+    return this.TModel.findOne({
+      $or: [{ email: identifier }, { username: identifier }],
+    })
+      .select('-password')
+      .exec();
   }
 
   async findOne(id: string, includes?: string): Promise<any> {

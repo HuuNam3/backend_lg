@@ -1,8 +1,8 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { UserAccountsService } from '../user-accounts/user-accounts.service';
 import { JwtService } from '@nestjs/jwt';
-import { compare } from 'bcrypt';
-import { hash } from 'bcrypt';
+import { compare, hash } from 'bcrypt';
+import { Response } from 'express';
 import { ConfigService } from '@nestjs/config';
 
 @Injectable()
@@ -17,20 +17,35 @@ export class AuthService {
     return this.TService.create(user);
   }
 
-  login(user: any) {
+  async login(user: any, res: Response) {
     const payload = { email: user.email, sub: user._id };
 
-    const refresh_token = this.jwtService.sign(payload, {
+    const refreshToken = this.jwtService.sign(payload, {
       expiresIn: this.configService.get<string>('JWT_REFRESH_TOKEN_EXPIRE'),
     });
 
-    this.saveRefreshToken(refresh_token, user._id);
+    const accessToken = this.jwtService.sign(payload, {
+      expiresIn: this.configService.get<string>('JWT_ACCESS_TOKEN_EXPIRE'),
+    });
+
+    await this.saveRefreshToken(refreshToken, user._id);
+
+    res.cookie('access_token', accessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 1 * 60 * 60 * 1000,
+    });
+
+    res.cookie('refresh_token', refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
 
     return {
-      access_token: this.jwtService.sign(payload, {
-        expiresIn: this.configService.get<string>('JWT_ACCESS_TOKEN_EXPIRE'),
-      }),
-      refresh_token: refresh_token,
+      message: 'Login successful',
     };
   }
 

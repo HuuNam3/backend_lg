@@ -7,12 +7,21 @@ import {
 } from '@nestjs/common';
 import { HttpExceptionFilter } from './exceptions/http-exception.filter';
 import { winstonLogger } from './logger/winston.logger';
-
+import * as cookieParser from 'cookie-parser';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     cors: true,
     logger: winstonLogger,
   });
+  app.enableCors({
+    origin: [
+      'http://localhost:3000',
+      'http://localhost:4000',
+      'https://lang-go-nine.vercel.app',
+    ],
+    credentials: true,
+  });
+  app.use(cookieParser());
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,

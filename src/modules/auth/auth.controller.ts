@@ -6,9 +6,10 @@ import {
   Request,
   Get,
   BadRequestException,
+  Res,
 } from '@nestjs/common';
+import { Response } from 'express';
 import { AuthService } from './auth.service';
-import { hash } from 'bcrypt';
 import { LocalAuthGuard } from 'src/guards/local-auth.guard';
 import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
 import { CreateUserAccountsDto } from 'src/dto/create-user-accounts.dto';
@@ -22,18 +23,21 @@ export class AuthController {
 
   @UseGuards(LocalAuthGuard)
   @Post('/login')
-  async login(@Request() req) {
-    return this.TService.login(req.user);
+  login(@Request() req, @Res({ passthrough: true }) res: Response) {
+    return this.TService.login(req.user, res);
   }
 
   @Post('refresh-token')
-  async refreshToken(@Body() { refreshToken }: { refreshToken: string }) {
+  async refreshToken(
+    @Body() { refreshToken }: { refreshToken: string },
+    @Res({ passthrough: true }) res: Response,
+  ) {
     if (!refreshToken) {
       throw new BadRequestException('refresh token is required');
     }
     const user = await this.TService.verfiyRefreshToken(refreshToken);
     if (user) {
-      return this.TService.login(user);
+      return this.TService.login(user, res);
     }
   }
 
