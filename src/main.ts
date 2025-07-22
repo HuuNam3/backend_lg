@@ -10,7 +10,6 @@ import { winstonLogger } from './logger/winston.logger';
 import * as cookieParser from 'cookie-parser';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
-    cors: true,
     logger: winstonLogger,
   });
   app.enableCors({
@@ -18,6 +17,7 @@ async function bootstrap() {
       'http://localhost:3000',
       'http://localhost:4000',
       'https://lang-go-nine.vercel.app',
+      'https://backend-lg.onrender.com',
     ],
     credentials: true,
   });
