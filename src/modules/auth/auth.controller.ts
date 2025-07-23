@@ -42,8 +42,19 @@ export class AuthController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @Post('logout')
+  logout(@Res({ passthrough: true }) res: Response) {
+    return this.TService.logout(res);
+  }
+
+  @UseGuards(JwtAuthGuard)
   @Get('me')
   getProfile(@Request() req) {
     return req.user;
+  }
+
+  @Get('check-token')
+  getToken() {
+    return true;
   }
 }

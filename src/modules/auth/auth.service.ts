@@ -49,6 +49,26 @@ export class AuthService {
     };
   }
 
+  logout(res: Response) {
+    res.cookie('access_token', {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'none',
+      maxAge: 1 * 60 * 60 * 1000,
+    });
+
+    res.cookie('refresh_token', {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'none',
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
+    return {
+      message: 'Logout successful',
+    };
+  }
+
   async saveRefreshToken(refresh_token: string, userId: string) {
     const user = await this.TService.findOne(userId);
     if (user) {
