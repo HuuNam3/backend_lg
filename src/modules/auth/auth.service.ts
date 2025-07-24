@@ -54,14 +54,14 @@ export class AuthService {
       httpOnly: true,
       secure: true,
       sameSite: 'none',
-      maxAge: 1 * 60 * 60 * 1000,
+      maxAge: 0,
     });
 
     res.cookie('refresh_token', {
       httpOnly: true,
       secure: true,
       sameSite: 'none',
-      maxAge: 7 * 24 * 60 * 60 * 1000,
+      maxAge: 0,
     });
 
     return {
