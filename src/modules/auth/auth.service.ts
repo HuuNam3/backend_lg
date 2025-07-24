@@ -50,18 +50,20 @@ export class AuthService {
   }
 
   logout(res: Response) {
-    res.cookie('access_token', {
+    res.cookie('access_token', '', {
       httpOnly: true,
       secure: true,
       sameSite: 'none',
       maxAge: 0,
+      expires: new Date(0),
     });
 
-    res.cookie('refresh_token', {
+    res.cookie('refresh_token', '', {
       httpOnly: true,
       secure: true,
       sameSite: 'none',
       maxAge: 0,
+      expires: new Date(0),
     });
 
     return {
