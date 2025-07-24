@@ -30,19 +30,26 @@ export class AuthService {
 
     await this.saveRefreshToken(refreshToken, user._id);
 
-    res.cookie('access_token', accessToken, {
+    res.cookie('token', accessToken, {
       httpOnly: true,
       secure: true,
       sameSite: 'none',
       maxAge: 1 * 60 * 60 * 1000,
     });
 
-    res.cookie('refresh_token', refreshToken, {
-      httpOnly: true,
+    res.cookie('isLogin', true, {
+      httpOnly: false,
       secure: true,
       sameSite: 'none',
-      maxAge: 7 * 24 * 60 * 60 * 1000,
+      maxAge: 1 * 60 * 60 * 1000,
     });
+
+    // res.cookie('refresh_token', refreshToken, {
+    //   httpOnly: true,
+    //   secure: true,
+    //   sameSite: 'none',
+    //   maxAge: 7 * 24 * 60 * 60 * 1000,
+    // });
 
     return {
       message: 'Login successful',
@@ -50,7 +57,7 @@ export class AuthService {
   }
 
   logout(res: Response) {
-    res.cookie('access_token', '', {
+    res.cookie('token', '', {
       httpOnly: true,
       secure: true,
       sameSite: 'none',
@@ -58,13 +65,21 @@ export class AuthService {
       expires: new Date(0),
     });
 
-    res.cookie('refresh_token', '', {
-      httpOnly: true,
+    res.cookie('isLogin', '', {
+      httpOnly: false,
       secure: true,
       sameSite: 'none',
       maxAge: 0,
       expires: new Date(0),
     });
+
+    // res.cookie('refresh_token', '', {
+    //   httpOnly: true,
+    //   secure: true,
+    //   sameSite: 'none',
+    //   maxAge: 0,
+    //   expires: new Date(0),
+    // });
 
     return {
       message: 'Logout successful',

@@ -12,12 +12,13 @@ import {
   HttpStatus,
   Logger,
   UseGuards,
+  Req,
 } from '@nestjs/common';
 import { UserCoursesService } from './user-courses.service';
 import { UpdateCourseCategoryDto } from '../../dto/update-course-category.dto';
-import { CreateCourseCategoryDto } from '../../dto/create-course-category.dto';
 import { Types } from 'mongoose';
 import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
+import { CreateUserCourseDto } from 'src/dto/create-user-course.dto';
 
 @Controller('user-courses')
 @UseGuards(JwtAuthGuard) // đăng nhập mới cho sử dụng controler
@@ -28,6 +29,33 @@ export class UserCoursesController {
   @Get()
   findAll(@Query('includes') includes: string) {
     return this.TService.findAll(includes);
+  }
+
+  @Get('my-courses')
+  async MyCourses(@Req() req: any) {
+    return await this.TService.getMyCourses(req?.user?._id);
+  }
+
+  @Get('list-my-courses')
+  async ListMyCourses(@Req() req: any) {
+    console.log(req?.user?._id);
+    return await this.TService.getListMyCourses(req?.user?._id);
+  }
+
+  @Get(':courseId/check')
+  async checkRegistration(
+    @Param('courseId') courseId: string,
+    @Req() req: any,
+  ) {
+    if (!Types.ObjectId.isValid(courseId)) {
+      this.logger.error('couresID/check');
+      throw new HttpException('ID không hợp lệ', HttpStatus.BAD_REQUEST);
+    }
+    const isRegistered = await this.TService.isUserRegistered(
+      courseId,
+      req?.user?._id,
+    );
+    return { isRegistered };
   }
 
   @Get('/:id')
@@ -45,7 +73,8 @@ export class UserCoursesController {
   }
 
   @Post()
-  create(@Body() createDto: CreateCourseCategoryDto) {
+  create(@Body() createDto: CreateUserCourseDto, @Req() req: any) {
+    createDto.user_id = req.user._id;
     return this.TService.create(createDto);
   }
 

@@ -10,10 +10,13 @@ export type UserCoursesDocument = UserCourses & Document;
 })
 export class UserCourses {
   @Prop({ required: true })
-  title: string;
+  user_id: string;
 
   @Prop()
-  description: string;
+  course_id: string;
+
+  @Prop()
+  progress: string;
 
   @Prop()
   createdAt: Date;

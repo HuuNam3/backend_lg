@@ -30,6 +30,19 @@ export class CoursesController {
     return this.TService.findAll(includes);
   }
 
+  @Get(':slug/slug')
+  async findSlug(
+    @Param('slug') slug: string,
+    @Query('includes') includes: string,
+  ) {
+    const res = await this.TService.findSlug(slug, includes);
+    if (!res) {
+      this.logger.error('findSlug');
+      throw new HttpException('không tìm thấy Slug', HttpStatus.NOT_FOUND);
+    }
+    return res;
+  }
+
   @Get('/:id')
   async find(@Param('id') id: string, @Query('includes') includes: string) {
     if (!Types.ObjectId.isValid(id)) {

@@ -5,6 +5,7 @@ export function includeHandle(
   inclocalField: string,
   incforeignField: string,
   id?: string,
+  slug?: string,
 ) {
   // const arrayColl = ['courses', 'course_categories'];
   const pipeline: PipelineStage[] = [];
@@ -12,6 +13,14 @@ export function includeHandle(
     pipeline.push({
       $match: {
         _id: new Types.ObjectId(id),
+      },
+    });
+  }
+
+  if (slug) {
+    pipeline.push({
+      $match: {
+        slug: slug,
       },
     });
   }
@@ -31,6 +40,7 @@ export function includeHandle(
 export enum Collections {
   courses = 'courses',
   courseCategories = 'course_categories',
+  courseIntroduction = 'course_introduction',
 }
 
 export function checkCollections(value: unknown): value is Collections {

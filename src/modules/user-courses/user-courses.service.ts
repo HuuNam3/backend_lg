@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectConnection, InjectModel } from '@nestjs/mongoose';
-import { Connection, Model } from 'mongoose';
+import { Connection, Model, Types } from 'mongoose';
 import {
   UserCourses,
   UserCoursesDocument,
@@ -24,6 +24,47 @@ export class UserCoursesService {
     if (include) {
       return await this.TModel.aggregate(include);
     }
+  }
+
+  async getMyCourses(id: string): Promise<object> {
+    const coursesEnrolled = await this.TModel.countDocuments({
+      user_id: new Types.ObjectId(id),
+    });
+    const lessonsCompleted = await this.TModel.countDocuments({
+      user_id: new Types.ObjectId(id),
+      progress: 100,
+    });
+    return {
+      coursesEnrolled,
+      lessonsCompleted,
+    };
+  }
+
+  async getListMyCourses(id: string): Promise<any> {
+    const aggregate = [
+      { $match: { user_id: new Types.ObjectId(id) } },
+      {
+        $lookup: {
+          from: 'courses',
+          localField: 'course_id',
+          foreignField: '_id',
+          as: 'course',
+        },
+      },
+      { $unwind: '$course' },
+    ];
+    return await this.TModel.aggregate(aggregate);
+  }
+
+  async isUserRegistered(courseId: string, userId: string): Promise<boolean> {
+    const exist = await this.TModel.exists({
+      course_id: new Types.ObjectId(courseId),
+      user_id: new Types.ObjectId(userId),
+    });
+    if (exist) {
+      return true;
+    }
+    return false;
   }
 
   async findOne(id: string, includes?: string): Promise<any> {
