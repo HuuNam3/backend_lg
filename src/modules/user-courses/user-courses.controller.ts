@@ -38,7 +38,6 @@ export class UserCoursesController {
 
   @Get('list-my-courses')
   async ListMyCourses(@Req() req: any) {
-    console.log(req?.user?._id);
     return await this.TService.getListMyCourses(req?.user?._id);
   }
 
@@ -74,7 +73,7 @@ export class UserCoursesController {
 
   @Post()
   create(@Body() createDto: CreateUserCourseDto, @Req() req: any) {
-    createDto.user_id = req.user._id;
+    createDto.user_id = new Types.ObjectId(req.user._id);
     return this.TService.create(createDto);
   }
 

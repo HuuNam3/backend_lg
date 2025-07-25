@@ -28,10 +28,10 @@ export class UserCoursesService {
 
   async getMyCourses(id: string): Promise<object> {
     const coursesEnrolled = await this.TModel.countDocuments({
-      user_id: new Types.ObjectId(id),
+      user_id: id,
     });
     const lessonsCompleted = await this.TModel.countDocuments({
-      user_id: new Types.ObjectId(id),
+      user_id: id,
       progress: 100,
     });
     return {

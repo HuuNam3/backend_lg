@@ -1,7 +1,8 @@
 import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { Types } from 'mongoose';
 
 export class CreateUserCourseDto {
-  user_id: string;
+  user_id: Types.ObjectId;
 
   @IsString({ message: 'phải là chuỗi' })
   @IsNotEmpty({ message: 'không được trống' })
