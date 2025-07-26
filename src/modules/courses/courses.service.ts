@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectConnection, InjectModel } from '@nestjs/mongoose';
-import { Connection, Model, Types } from 'mongoose';
+import { Connection, Model } from 'mongoose';
 import { Courses, CoursesDocument } from '../../schemas/courses.schema';
 import { UpdateCourseCategoryDto } from '../../dto/update-course-category.dto';
 import { checkCollections, includeHandle } from 'src/lib/include-handle';
@@ -17,7 +17,7 @@ export class CoursesService {
     if (!checkCollections(includes)) {
       return await this.TModel.find().exec();
     }
-    const include = includeHandle(includes, '_id', 'course_categories_id');
+    const include = includeHandle(includes);
     if (include) {
       return await this.TModel.aggregate(include);
     }
@@ -27,13 +27,7 @@ export class CoursesService {
     if (!checkCollections(includes)) {
       return await this.TModel.findOne({ slug: slug }).exec();
     }
-    const include = includeHandle(
-      includes,
-      '_id',
-      'course_id',
-      undefined,
-      slug,
-    );
+    const include = includeHandle(includes, undefined, slug);
     if (include) {
       const res: Courses[] = await this.TModel.aggregate(include);
       return res[0] || null;
@@ -44,7 +38,7 @@ export class CoursesService {
     if (!checkCollections(includes)) {
       return await this.TModel.findById(id).exec();
     }
-    const include = includeHandle(includes, '_id', 'course_id', id);
+    const include = includeHandle(includes, id);
     if (include) {
       const res: Courses[] = await this.TModel.aggregate(include);
       return res[0] || null;

@@ -1,14 +1,8 @@
 import { PipelineStage, Types } from 'mongoose';
 
-export function includeHandle(
-  inc: any,
-  inclocalField: string,
-  incforeignField: string,
-  id?: string,
-  slug?: string,
-) {
-  // const arrayColl = ['courses', 'course_categories'];
+export function includeHandle(inc: any, id?: string, slug?: string) {
   const pipeline: PipelineStage[] = [];
+
   if (id) {
     pipeline.push({
       $match: {
@@ -28,8 +22,8 @@ export function includeHandle(
   pipeline.push({
     $lookup: {
       from: inc as string,
-      localField: inclocalField,
-      foreignField: incforeignField,
+      localField: '_id',
+      foreignField: getForeignField(inc),
       as: inc as string,
     },
   });
@@ -39,8 +33,21 @@ export function includeHandle(
 
 export enum Collections {
   courses = 'courses',
-  courseCategories = 'course_categories',
+  lessons = 'lessons',
   courseIntroduction = 'course_introduction',
+  courseCategories = 'course_categories',
+}
+
+const foreignFieldMap: Record<Collections, string> = {
+  [Collections.courses]: 'course_categories_id',
+  [Collections.lessons]: 'course_id',
+  [Collections.courseIntroduction]: 'course_id',
+  [Collections.courseCategories]: '',
+};
+
+function getForeignField(collection: string): string {
+  const field = foreignFieldMap[collection as Collections];
+  return field;
 }
 
 export function checkCollections(value: unknown): value is Collections {

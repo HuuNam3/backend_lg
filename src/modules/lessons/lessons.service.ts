@@ -17,9 +17,20 @@ export class LessonsService {
     if (!checkCollections(includes)) {
       return await this.TModel.find().exec();
     }
-    const include = includeHandle(includes, '_id', 'course_categories_id');
+    const include = includeHandle(includes);
     if (include) {
       return await this.TModel.aggregate(include);
+    }
+  }
+
+  async findSlug(slug: string, includes?: string): Promise<any> {
+    if (!checkCollections(includes)) {
+      return await this.TModel.findOne({ slug: slug }).exec();
+    }
+    const include = includeHandle(includes, undefined, slug);
+    if (include) {
+      const res: Lessons[] = await this.TModel.aggregate(include);
+      return res[0] || null;
     }
   }
 
@@ -27,7 +38,7 @@ export class LessonsService {
     if (!checkCollections(includes)) {
       return await this.TModel.findById(id).exec();
     }
-    const include = includeHandle(includes, '_id', 'course_categories_id', id);
+    const include = includeHandle(includes, id);
     if (include) {
       const res: Lessons[] = await this.TModel.aggregate(include);
       return res[0] || null;

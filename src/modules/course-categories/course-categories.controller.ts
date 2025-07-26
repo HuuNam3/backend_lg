@@ -11,16 +11,13 @@ import {
   HttpException,
   HttpStatus,
   Logger,
-  // UseGuards,
 } from '@nestjs/common';
 import { CourseCategoriesService } from './course-categories.service';
 import { UpdateCourseCategoryDto } from '../../dto/update-course-category.dto';
 import { CreateCourseCategoryDto } from '../../dto/create-course-category.dto';
 import { Types } from 'mongoose';
-// import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
 
 @Controller('course-categories')
-// @UseGuards(JwtAuthGuard) // đăng nhập mới cho sử dụng controler
 export class CourseCategoriesController {
   private readonly logger = new Logger(CourseCategoriesController.name);
   constructor(private readonly TService: CourseCategoriesService) {}

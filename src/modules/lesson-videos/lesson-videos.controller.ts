@@ -44,6 +44,23 @@ export class LessonVideosController {
     return res;
   }
 
+  @Get(':lessonId/lessonId')
+  async findLessonId(
+    @Param('lessonId') lessonId: string,
+    @Query('includes') includes: string,
+  ) {
+    if (!Types.ObjectId.isValid(lessonId)) {
+      this.logger.error('findOne');
+      throw new HttpException('lessonId không hợp lệ', HttpStatus.BAD_REQUEST);
+    }
+    const res = await this.TService.findLessonId(lessonId, includes);
+    if (!res) {
+      this.logger.error('findOne');
+      throw new HttpException('không tìm thấy ID', HttpStatus.NOT_FOUND);
+    }
+    return res;
+  }
+
   @Post()
   create(@Body() createDto: CreateCourseCategoryDto) {
     return this.TService.create(createDto);

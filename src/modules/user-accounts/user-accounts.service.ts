@@ -20,7 +20,7 @@ export class UserAccountsService {
     if (!checkCollections(includes)) {
       return await this.TModel.find().exec();
     }
-    const include = includeHandle(includes, '_id', 'course_categories_id');
+    const include = includeHandle(includes);
     if (include) {
       return await this.TModel.aggregate(include);
     }
@@ -44,7 +44,7 @@ export class UserAccountsService {
     if (!checkCollections(includes)) {
       return await this.TModel.findById(id).exec();
     }
-    const include = includeHandle(includes, '_id', 'course_categories_id', id);
+    const include = includeHandle(includes, id);
     if (include) {
       const res: UserAccounts[] = await this.TModel.aggregate(include);
       return res[0] || null;

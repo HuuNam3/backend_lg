@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectConnection, InjectModel } from '@nestjs/mongoose';
-import { Connection, Model } from 'mongoose';
+import { Connection, Model, Types } from 'mongoose';
 import {
   LessonVideos,
   LessonVideosDocument,
@@ -20,9 +20,22 @@ export class LessonVideosService {
     if (!checkCollections(includes)) {
       return await this.TModel.find().exec();
     }
-    const include = includeHandle(includes, '_id', 'course_categories_id');
+    const include = includeHandle(includes);
     if (include) {
       return await this.TModel.aggregate(include);
+    }
+  }
+
+  async findLessonId(lessonId: string, includes?: string): Promise<any> {
+    if (!checkCollections(includes)) {
+      return await this.TModel.findOne({
+        lesson_id: new Types.ObjectId(lessonId),
+      }).exec();
+    }
+    const include = includeHandle(includes);
+    if (include) {
+      const res: LessonVideos[] = await this.TModel.aggregate(include);
+      return res[0] || null;
     }
   }
 
@@ -30,7 +43,7 @@ export class LessonVideosService {
     if (!checkCollections(includes)) {
       return await this.TModel.findById(id).exec();
     }
-    const include = includeHandle(includes, '_id', 'course_categories_id', id);
+    const include = includeHandle(includes, id);
     if (include) {
       const res: LessonVideos[] = await this.TModel.aggregate(include);
       return res[0] || null;

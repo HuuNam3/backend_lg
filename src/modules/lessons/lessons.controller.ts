@@ -44,6 +44,19 @@ export class LessonsController {
     return res;
   }
 
+  @Get(':slug/slug')
+  async findSlug(
+    @Param('slug') slug: string,
+    @Query('includes') includes: string,
+  ) {
+    const res = await this.TService.findSlug(slug, includes);
+    if (!res) {
+      this.logger.error('findSlug');
+      throw new HttpException('không tìm thấy Slug', HttpStatus.NOT_FOUND);
+    }
+    return res;
+  }
+
   @Post()
   create(@Body() createDto: CreateCourseCategoryDto) {
     return this.TService.create(createDto);
