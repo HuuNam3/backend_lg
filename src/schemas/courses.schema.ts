@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Document, Types } from 'mongoose';
 
 export type CoursesDocument = Courses & Document;
 
@@ -9,11 +9,32 @@ export type CoursesDocument = Courses & Document;
   versionKey: false,
 })
 export class Courses {
-  @Prop({ required: true })
-  title: string;
+  @Prop()
+  instructor: string;
 
   @Prop()
-  description: string;
+  duration: number;
+
+  @Prop()
+  level: string;
+
+  @Prop()
+  slug: string;
+
+  @Prop()
+  order: number;
+
+  @Prop()
+  name: string;
+
+  @Prop()
+  thumbnail: string;
+
+  @Prop()
+  course_categories_id: Types.ObjectId;
+
+  @Prop()
+  language: string;
 
   @Prop()
   createdAt: Date;

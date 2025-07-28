@@ -13,10 +13,10 @@ export class UserCourses {
   user_id: Types.ObjectId;
 
   @Prop()
-  course_id: string;
+  course_id: Types.ObjectId;
 
   @Prop()
-  progress: string;
+  progress: number;
 
   @Prop()
   createdAt: Date;

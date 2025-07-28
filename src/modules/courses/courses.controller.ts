@@ -15,9 +15,9 @@ import {
 } from '@nestjs/common';
 import { CoursesService } from './courses.service';
 import { UpdateCourseCategoryDto } from '../../dto/update-course-category.dto';
-import { CreateCourseCategoryDto } from '../../dto/create-course-category.dto';
 import { Types } from 'mongoose';
 import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
+import { CreateCourseDto } from 'src/dto/create-course.dto';
 
 @Controller('courses')
 @UseGuards(JwtAuthGuard) // đăng nhập mới cho sử dụng controler
@@ -58,7 +58,7 @@ export class CoursesController {
   }
 
   @Post()
-  create(@Body() createDto: CreateCourseCategoryDto) {
+  create(@Body() createDto: CreateCourseDto) {
     return this.TService.create(createDto);
   }
 

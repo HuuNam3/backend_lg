@@ -74,6 +74,7 @@ export class UserCoursesController {
   @Post()
   create(@Body() createDto: CreateUserCourseDto, @Req() req: any) {
     createDto.user_id = new Types.ObjectId(req.user._id);
+    createDto.course_id = new Types.ObjectId(createDto.course_id);
     return this.TService.create(createDto);
   }
 

@@ -1,14 +1,13 @@
-import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsNotEmpty, IsNumber } from 'class-validator';
 import { Types } from 'mongoose';
 
 export class CreateUserCourseDto {
   user_id: Types.ObjectId;
 
-  @IsString({ message: 'phải là chuỗi' })
   @IsNotEmpty({ message: 'không được trống' })
-  course_id: string;
+  course_id: Types.ObjectId;
 
-  @IsNumber({}, { message: 'phải là chuỗi' })
+  @IsNumber({}, { message: 'phải là số' })
   @IsNotEmpty({ message: 'không được trống' })
-  progress: string;
+  progress: number;
 }
