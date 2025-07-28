@@ -13,9 +13,7 @@ export class CreateUserAccountsDto {
   password: string;
 
   @IsEmail({}, { message: 'Email không hợp lệ' })
-  @IsString({ message: 'title phải là chuỗi' })
   @IsNotEmpty({ message: 'title không được trống' })
-  // @IsEmailUnique({ message: 'Email đã tồn tại' })
   email: string;
 
   @IsString({ message: 'title phải là chuỗi' })

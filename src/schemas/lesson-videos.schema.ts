@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Document, Types } from 'mongoose';
 
 export type LessonVideosDocument = LessonVideos & Document;
 
@@ -9,11 +9,20 @@ export type LessonVideosDocument = LessonVideos & Document;
   versionKey: false,
 })
 export class LessonVideos {
-  @Prop({ required: true })
+  @Prop()
+  lesson_id: Types.ObjectId;
+
+  @Prop()
+  subtitle: string;
+
+  @Prop()
+  url: string;
+
+  @Prop()
   title: string;
 
   @Prop()
-  description: string;
+  durations: number;
 
   @Prop()
   createdAt: Date;

@@ -26,6 +26,16 @@ export class UserAccountsService {
     }
   }
 
+  async getRole(identifier: string): Promise<any> {
+    const role = await this.TModel.findOne({
+      $or: [{ email: identifier }, { username: identifier }],
+    })
+      .select('role')
+      .exec();
+
+    return role;
+  }
+
   async findByEmailOrUsername(identifier: string) {
     return this.TModel.findOne({
       $or: [{ email: identifier }, { username: identifier }],

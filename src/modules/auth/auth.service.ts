@@ -90,7 +90,6 @@ export class AuthService {
     const user = await this.TService.findOne(userId);
     if (user) {
       user.refresh_token = await hash(refresh_token, 10);
-      console.log(user);
     }
   }
 

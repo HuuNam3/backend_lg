@@ -10,22 +10,25 @@ import {
   Query,
   HttpException,
   HttpStatus,
-  UseGuards,
   Logger,
+  UseGuards,
 } from '@nestjs/common';
 import { UpdateUserAccountsDto } from '../../dto/update-user-accounts.dto';
 import { CreateUserAccountsDto } from '../../dto/create-user-accounts.dto';
 import { Types } from 'mongoose';
 import { UserAccountsService } from './user-accounts.service';
+import { Roles } from 'src/decorator/roles.decorator';
 import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
+import { RolesGuard } from 'src/guards/roles.guard';
 
 @Controller('user-accounts')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
 export class UserAccountsController {
   private readonly logger = new Logger(UserAccountsController.name);
   constructor(private readonly TService: UserAccountsService) {}
 
   @Get()
+  @Roles(['admin'])
   findAll(@Query('includes') includes: string) {
     return this.TService.findAll(includes);
   }
