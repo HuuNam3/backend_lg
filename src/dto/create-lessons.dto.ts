@@ -10,4 +10,7 @@ export class CreateLessonsDto {
 
   @IsNotEmpty({ message: 'title không được trống' })
   course_id: Types.ObjectId;
+
+  @IsNotEmpty({ message: 'title không được trống' })
+  types: string[];
 }

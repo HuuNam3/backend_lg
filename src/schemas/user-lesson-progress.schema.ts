@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Document, Types } from 'mongoose';
 
 export type UserLessonProgressDocument = UserLessonProgress & Document;
 
@@ -9,11 +9,17 @@ export type UserLessonProgressDocument = UserLessonProgress & Document;
   versionKey: false,
 })
 export class UserLessonProgress {
-  @Prop({ required: true })
-  title: string;
+  @Prop()
+  user_id: Types.ObjectId;
 
   @Prop()
-  description: string;
+  lesson_id: Types.ObjectId;
+
+  @Prop()
+  course_id: Types.ObjectId;
+
+  @Prop()
+  status: string;
 
   @Prop()
   createdAt: Date;

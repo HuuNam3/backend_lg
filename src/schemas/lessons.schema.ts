@@ -19,6 +19,9 @@ export class Lessons {
   course_id: Types.ObjectId;
 
   @Prop()
+  types: string[];
+
+  @Prop()
   createdAt: Date;
 
   @Prop()

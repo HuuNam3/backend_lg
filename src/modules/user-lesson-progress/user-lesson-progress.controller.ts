@@ -15,9 +15,9 @@ import {
 } from '@nestjs/common';
 import { UserLessonProgressService } from './user-lesson-progress.service';
 import { UpdateCourseCategoryDto } from '../../dto/update-course-category.dto';
-import { CreateCourseCategoryDto } from '../../dto/create-course-category.dto';
 import { Types } from 'mongoose';
 import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
+import { CreateUserLessonProgressDto } from 'src/dto/create-user-lesson-progress.dto';
 
 @Controller('user-lesson-progress')
 @UseGuards(JwtAuthGuard) // đăng nhập mới cho sử dụng controler
@@ -45,7 +45,10 @@ export class UserLessonProgressController {
   }
 
   @Post()
-  create(@Body() createDto: CreateCourseCategoryDto) {
+  create(@Body() createDto: CreateUserLessonProgressDto) {
+    createDto.lesson_id = new Types.ObjectId(createDto.lesson_id);
+    createDto.user_id = new Types.ObjectId(createDto.user_id);
+    createDto.course_id = new Types.ObjectId(createDto.course_id);
     return this.TService.create(createDto);
   }
 

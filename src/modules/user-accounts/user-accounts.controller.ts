@@ -34,6 +34,7 @@ export class UserAccountsController {
   }
 
   @Get('/:id')
+  @Roles(['admin'])
   async find(@Param('id') id: string, @Query('includes') includes: string) {
     if (!Types.ObjectId.isValid(id)) {
       this.logger.error('findOne');
@@ -48,21 +49,25 @@ export class UserAccountsController {
   }
 
   @Post()
+  @Roles(['admin'])
   create(@Body() createDto: CreateUserAccountsDto) {
     return this.TService.create(createDto);
   }
 
   @Put('/:id')
+  @Roles(['admin'])
   update(@Param('id') id: string, @Body() updateDto: UpdateUserAccountsDto) {
     return this.TService.update(id, updateDto);
   }
 
   @Patch('/:id')
+  @Roles(['admin'])
   patch(@Param('id') id: string, @Body() updateDto: UpdateUserAccountsDto) {
     return this.TService.update(id, updateDto);
   }
 
   @Delete('/:id')
+  @Roles(['admin'])
   async delete(@Param('id') id: string) {
     if (!Types.ObjectId.isValid(id)) {
       this.logger.error('Delete');

@@ -15,5 +15,6 @@ import {
   ],
   controllers: [UserLessonProgressController],
   providers: [UserLessonProgressService],
+  exports: [UserLessonProgressService],
 })
 export class UserLessonProgressModule {}

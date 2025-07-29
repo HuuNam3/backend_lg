@@ -1,15 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { InjectConnection, InjectModel } from '@nestjs/mongoose';
-import { Connection, Model } from 'mongoose';
+import { Connection, Model, Types } from 'mongoose';
 import { Lessons, LessonsDocument } from '../../schemas/lessons.schema';
 import { UpdateCourseCategoryDto } from '../../dto/update-course-category.dto';
 import { checkCollections, includeHandle } from 'src/lib/include-handle';
+import { UserLessonProgressService } from '../user-lesson-progress/user-lesson-progress.service';
 
 @Injectable()
 export class LessonsService {
   constructor(
     @InjectModel(Lessons.name)
     private TModel: Model<LessonsDocument>,
+    private readonly TService: UserLessonProgressService,
     @InjectConnection() private readonly connection: Connection,
   ) {}
 
@@ -43,6 +45,24 @@ export class LessonsService {
       const res: Lessons[] = await this.TModel.aggregate(include);
       return res[0] || null;
     }
+  }
+
+  async getLessonDetail(coursesId: string): Promise<object> {
+    const lessonFull = await this.TModel.findOne({
+      course_id: new Types.ObjectId(coursesId),
+    });
+
+    const totalLesson = await this.TModel.countDocuments({
+      course_id: new Types.ObjectId(coursesId),
+    });
+
+    const completeLesson = await this.TService.getLessonComplete(coursesId);
+
+    return {
+      lessonFull,
+      totalLesson,
+      completeLesson,
+    };
   }
 
   async create(data: Partial<Lessons>) {

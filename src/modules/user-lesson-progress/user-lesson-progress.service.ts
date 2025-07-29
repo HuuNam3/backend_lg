@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectConnection, InjectModel } from '@nestjs/mongoose';
-import { Connection, Model } from 'mongoose';
+import { Connection, Model, Types } from 'mongoose';
 import {
   UserLessonProgress,
   UserLessonProgressDocument,
@@ -35,6 +35,14 @@ export class UserLessonProgressService {
       const res: UserLessonProgress[] = await this.TModel.aggregate(include);
       return res[0] || null;
     }
+  }
+
+  async getLessonComplete(coursesId: string) {
+    const completeLesson = await this.TModel.countDocuments({
+      course_id: new Types.ObjectId(coursesId),
+      status: 'isComplete',
+    });
+    return completeLesson;
   }
 
   async create(data: Partial<UserLessonProgress>) {
