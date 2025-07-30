@@ -1,6 +1,11 @@
 import { PipelineStage, Types } from 'mongoose';
 
-export function includeHandle(inc: any, id?: string, slug?: string) {
+export function includeHandle(
+  inc: any,
+  id?: string,
+  slug?: string,
+  course_id?: string,
+) {
   const pipeline: PipelineStage[] = [];
 
   if (id) {
@@ -15,6 +20,14 @@ export function includeHandle(inc: any, id?: string, slug?: string) {
     pipeline.push({
       $match: {
         slug: slug,
+      },
+    });
+  }
+
+  if (course_id) {
+    pipeline.push({
+      $match: {
+        course_id: new Types.ObjectId(course_id),
       },
     });
   }
@@ -34,6 +47,7 @@ export function includeHandle(inc: any, id?: string, slug?: string) {
 export enum Collections {
   courses = 'courses',
   lessons = 'lessons',
+  lessonContain = 'lesson_contain',
   courseIntroduction = 'course_introduction',
   courseCategories = 'course_categories',
 }
@@ -41,6 +55,7 @@ export enum Collections {
 const foreignFieldMap: Record<Collections, string> = {
   [Collections.courses]: 'course_categories_id',
   [Collections.lessons]: 'course_id',
+  [Collections.lessonContain]: 'lesson_id',
   [Collections.courseIntroduction]: 'course_id',
   [Collections.courseCategories]: '',
 };

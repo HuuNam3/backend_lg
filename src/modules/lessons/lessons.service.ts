@@ -30,6 +30,7 @@ export class LessonsService {
       return await this.TModel.findOne({ slug: slug }).exec();
     }
     const include = includeHandle(includes, undefined, slug);
+    console.log(include);
     if (include) {
       const res: Lessons[] = await this.TModel.aggregate(include);
       return res[0] || null;
@@ -48,9 +49,13 @@ export class LessonsService {
   }
 
   async getLessonDetail(coursesId: string): Promise<object> {
-    const lessonFull = await this.TModel.findOne({
-      course_id: new Types.ObjectId(coursesId),
-    });
+    const include = includeHandle(
+      'lesson_contain',
+      undefined,
+      undefined,
+      coursesId,
+    );
+    const lessonFull = await this.TModel.aggregate(include);
 
     const totalLesson = await this.TModel.countDocuments({
       course_id: new Types.ObjectId(coursesId),

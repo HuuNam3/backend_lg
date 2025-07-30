@@ -34,6 +34,14 @@ export class CoursesService {
     }
   }
 
+  async findId(slug: string): Promise<any> {
+    const course = await this.TModel.findOne({ slug: slug }).exec();
+    if (!course) {
+      return undefined;
+    }
+    return course._id;
+  }
+
   async findOne(id: string, includes?: string): Promise<any> {
     if (!checkCollections(includes)) {
       return await this.TModel.findById(id).exec();

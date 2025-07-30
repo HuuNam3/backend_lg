@@ -19,7 +19,7 @@ export class Lessons {
   course_id: Types.ObjectId;
 
   @Prop()
-  types: string[];
+  contain: Types.ObjectId;
 
   @Prop()
   createdAt: Date;

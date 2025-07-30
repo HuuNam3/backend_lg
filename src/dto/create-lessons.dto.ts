@@ -12,5 +12,5 @@ export class CreateLessonsDto {
   course_id: Types.ObjectId;
 
   @IsNotEmpty({ message: 'title không được trống' })
-  types: string[];
+  contain: Types.ObjectId;
 }
