@@ -13,6 +13,7 @@ import { LessonVideosModule } from './modules/lesson-videos/lesson-videos.module
 import { UserCoursesModule } from './modules/user-courses/user-courses.module';
 import { UserLessonProgressModule } from './modules/user-lesson-progress/user-lesson-progress.module';
 import { LessonsModule } from './modules/lessons/lessons.module';
+import { LessonQuestionChoiceModule } from './modules/lesson-question-choice/lesson-question-choice.module';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
@@ -30,6 +31,7 @@ import { LessonsModule } from './modules/lessons/lessons.module';
     CourseCategoriesModule,
     UserLessonProgressModule,
     CourseIntroductionModule,
+    LessonQuestionChoiceModule,
   ],
   controllers: [AppController],
   providers: [AppService],
