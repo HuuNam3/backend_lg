@@ -14,6 +14,8 @@ import { UserCoursesModule } from './modules/user-courses/user-courses.module';
 import { UserLessonProgressModule } from './modules/user-lesson-progress/user-lesson-progress.module';
 import { LessonsModule } from './modules/lessons/lessons.module';
 import { LessonQuestionChoiceModule } from './modules/lesson-question-choice/lesson-question-choice.module';
+import { LessonPronounceModule } from './modules/lesson-pronounce/lesson-pronounce.module';
+import { LessonQuestionFinalModule } from './modules/lesson-question-final/lesson-question-final.module';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
@@ -24,13 +26,15 @@ import { LessonQuestionChoiceModule } from './modules/lesson-question-choice/les
     }),
     AuthModule,
     CoursesModule,
-    LessonsModule,
-    UserCoursesModule,
-    LessonVideosModule,
-    UserAccountsModule,
     CourseCategoriesModule,
-    UserLessonProgressModule,
     CourseIntroductionModule,
+    UserCoursesModule,
+    UserAccountsModule,
+    UserLessonProgressModule,
+    LessonsModule,
+    LessonVideosModule,
+    LessonPronounceModule,
+    LessonQuestionFinalModule,
     LessonQuestionChoiceModule,
   ],
   controllers: [AppController],
