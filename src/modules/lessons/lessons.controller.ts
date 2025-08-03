@@ -49,6 +49,11 @@ export class LessonsController {
     return await this.TService.getLessonDetail(id);
   }
 
+  @Get(':courseId/getId')
+  async getLessonId(@Param('courseId') id: string) {
+    return await this.TService.findId(id);
+  }
+
   @Get(':slug/slug')
   async findSlug(
     @Param('slug') slug: string,

@@ -48,6 +48,13 @@ export class LessonsService {
     }
   }
 
+  async findId(id: string): Promise<any> {
+    const lesson = await this.TModel.findOne({
+      course_id: new Types.ObjectId(id),
+    });
+    return lesson;
+  }
+
   async getLessonDetail(coursesId: string): Promise<object> {
     const include = includeHandle(
       'lesson_contain',
